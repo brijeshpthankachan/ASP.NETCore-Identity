@@ -28,6 +28,6 @@ public class AccountController : Controller
         var result = await _userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded) return View(model);
-        return View("/");
+        return LocalRedirect("/");
     }
 }
