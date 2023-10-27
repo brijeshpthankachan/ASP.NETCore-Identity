@@ -36,4 +36,10 @@ void AddServices(IServiceCollection services)
         opt.Lockout.MaxFailedAccessAttempts = 2;
         opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
     });
+
+    services.AddAuthentication().AddGoogle(options =>
+    {
+        options.ClientId = "912586231632-7747sd0jqkn9pk9f53r9le613dphacsd.apps.googleusercontent.com";
+        options.ClientSecret = "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";
+    });
 }
