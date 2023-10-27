@@ -1,5 +1,7 @@
 using IdentityMVC.Data;
+using IdentityMVC.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,4 +43,6 @@ void AddServices(IServiceCollection services)
         opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromSeconds(30);
         opt.SignIn.RequireConfirmedEmail = false;
     });
+
+    services.AddScoped<IEmailSender, EmailSender>();
 }
