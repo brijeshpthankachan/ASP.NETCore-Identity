@@ -38,4 +38,21 @@ public class AccountController : Controller
         return View();
     }
 
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        returnUrl ??= Url.Content("~/");
+
+        if (!ModelState.IsValid) return View(model);
+
+        var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+
+        if (result.Succeeded) return LocalRedirect(returnUrl);
+
+        ModelState.AddModelError(string.Empty, "Invalid User name or Password");
+        return View(model);
+    }
+
 }

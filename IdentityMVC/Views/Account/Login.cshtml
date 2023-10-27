@@ -1,1 +1,31 @@
-﻿<h1>Login View</h1>
+﻿@model LoginViewModel
+@using Microsoft.AspNetCore.Identity
+
+<h1>@ViewData["ReturnUrl"]</h1>
+
+<form method="post" asp-controller="Account" asp-route-returnUrl="@ViewData["ReturnUrl"]" asp-action="Login">
+    <div class="row bg-light mx-5 mt-5 justify-content-center pt-5">
+        <div asp-validation-summary="All" class="text-danger col-md-8 p-0"></div>
+        <div class="col-md-8">
+            <h1 class="text-info">Login</h1>
+            <hr />
+            <label asp-for="Email" class="form-label">Email Address</label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+        <div class="col-md-8 pt-2">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+        <div class="d-flex align-items-md-center col-md-8 pt-3">
+            <input asp-for="RememberMe" class="form-check" />
+            <label asp-for="RememberMe" class="mx-2">@Html.DisplayNameFor(x => x.RememberMe)</label>
+        </div>
+        <div class="col-md-8 pt-3">
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </div>
+        <div class="col-md-8 pt-3">
+            <a asp-action="Register" class=" p-0 nav-link">Register as a new user</a>
+            <a asp-action="ForgotPassword" class="p-0 pt-1 nav-link">Forgot password?</a>
+        </div>
+    </div>
+</form>
