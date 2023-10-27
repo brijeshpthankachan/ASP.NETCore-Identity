@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityMVC", "./IdentityMVC/IdentityMVC.csproj", "{4D012FB2-9ECC-4DC6-AC4A-AAC52CFBAA03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityMVC", "IdentityMVC\IdentityMVC.csproj", "{4D012FB2-9ECC-4DC6-AC4A-AAC52CFBAA03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityWebApi", "IdentityWebApi\IdentityWebApi.csproj", "{AD687E85-0D67-47B0-AC25-96B7F6E128E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{4D012FB2-9ECC-4DC6-AC4A-AAC52CFBAA03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D012FB2-9ECC-4DC6-AC4A-AAC52CFBAA03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D012FB2-9ECC-4DC6-AC4A-AAC52CFBAA03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD687E85-0D67-47B0-AC25-96B7F6E128E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD687E85-0D67-47B0-AC25-96B7F6E128E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD687E85-0D67-47B0-AC25-96B7F6E128E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD687E85-0D67-47B0-AC25-96B7F6E128E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
