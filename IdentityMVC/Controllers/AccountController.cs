@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace IdentityMVC.Controllers;
 
@@ -85,8 +86,6 @@ public class AccountController : Controller
         return View();
     }
 
-
-
     [HttpGet]
     public IActionResult ResetPasswordConfirmation() => View();
 
@@ -104,4 +103,82 @@ public class AccountController : Controller
         return View(model);
     }
 
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult ExternalLogin(string provider, string returnUrl = null)
+    {
+        Console.WriteLine(ViewData["ReturnUrl"]);
+        var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+        return Challenge(properties, provider);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+    {
+        returnUrl ??= Url.Content("~/");
+
+        if (remoteError != null)
+        {
+            ModelState.AddModelError(string.Empty, remoteError);
+            return View("LoginView");
+        }
+
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null)
+        {
+            return RedirectToAction(nameof(Login));
+        }
+
+        var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false);
+        if (result.Succeeded)
+        {
+            await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+            return LocalRedirect(returnUrl);
+        }
+
+        ViewData["ProviderDisplayName"] = info.ProviderDisplayName;
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+
+        return View("ExternalLoginConfirmation", new ExternalLoginConfirmationModel { Email = email, Name = name });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationModel model, string returnUrl = null)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(model);
+        }
+
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info == null) return View("Error");
+
+        var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
+        var result = await _userManager.CreateAsync(user);
+
+        if (result.Succeeded)
+        {
+            result = await _userManager.AddLoginAsync(user, info);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+                return LocalRedirect("/");
+            }
+        }
+
+        AddErrors(result);
+        ViewData["ReturnUrl"] = returnUrl;
+        return View(model);
+    }
+
+    private void AddErrors(IdentityResult result)
+    {
+        foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+    }
 }
