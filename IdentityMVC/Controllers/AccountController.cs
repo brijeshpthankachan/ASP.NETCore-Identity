@@ -30,9 +30,16 @@ public class AccountController : Controller
 
         var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name };
         var result = await _userManager.CreateAsync(user, model.Password);
-
         if (!result.Succeeded) return View(model);
-        return LocalRedirect("/");
+
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
+
+        var htmlContent = $"Please confirm your account by clicking here <a href=\"{callbackUrl}\" target=\"_blank\">link</a>";
+        await _emailSender.SendEmailAsync(model.Email, "Confirm Account", htmlContent);
+
+        return View("EmailConfirm");
     }
 
     [HttpGet]
@@ -180,5 +187,17 @@ public class AccountController : Controller
     private void AddErrors(IdentityResult result)
     {
         foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> ConfirmEmail(string userId = null, string code = null)
+    {
+
+        if (code == null || userId == null) return View("Error");
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null) return View("Error");
+        var result = await _userManager.ConfirmEmailAsync(user, code);
+        return View(result.Succeeded ? "ConfirmEmail" : "Error");
     }
 }

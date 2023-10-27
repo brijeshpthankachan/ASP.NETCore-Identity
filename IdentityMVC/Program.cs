@@ -48,7 +48,7 @@ void AddServices(IServiceCollection services)
 
     services.AddAuthentication().AddGoogle(options =>
     {
-        options.ClientId = "Your Client ID";
-        options.ClientSecret = "Your Client Secret";
+        options.ClientId = "912586231632-7747sd0jqkn9pk9f53r9le613dphacsd.apps.googleusercontent.com";
+        options.ClientSecret = "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";
     });
 }
