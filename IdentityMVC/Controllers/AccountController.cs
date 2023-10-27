@@ -1,5 +1,6 @@
 ﻿using IdentityMVC.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityMVC.Controllers;
@@ -7,12 +8,14 @@ namespace IdentityMVC.Controllers;
 public class AccountController : Controller
 {
     private readonly SignInManager<IdentityUser> _signInManager;
+    private readonly IEmailSender _emailSender;
     private readonly UserManager<IdentityUser> _userManager;
 
-    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+    public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IEmailSender emailSender)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _emailSender = emailSender;
     }
 
     [HttpGet]
@@ -64,5 +67,22 @@ public class AccountController : Controller
 
     [HttpGet]
     public IActionResult ForgotPassword() => View();
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+    {
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null) return View();
+        if (!ModelState.IsValid) return View();
+
+        var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
+
+
+        var htmlContent = $"Reset your password by clicking here <a href=\"{callbackUrl}\">link</a>";
+        await _emailSender.SendEmailAsync(model.Email, "Reset Password", htmlContent);
+
+        return View();
+    }
 
 }
