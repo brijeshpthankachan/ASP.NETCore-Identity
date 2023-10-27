@@ -45,4 +45,10 @@ void AddServices(IServiceCollection services)
     });
 
     services.AddScoped<IEmailSender, EmailSender>();
+
+    services.AddAuthentication().AddGoogle(options =>
+    {
+        options.ClientId = "Your Client ID";
+        options.ClientSecret = "Your Client Secret";
+    });
 }
