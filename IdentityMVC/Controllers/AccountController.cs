@@ -61,4 +61,8 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
         return RedirectToAction(nameof(HomeController.Index), "Home");
     }
+
+    [HttpGet]
+    public IActionResult ForgotPassword() => View();
+
 }

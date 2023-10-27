@@ -16,7 +16,6 @@ app.UseAuthorization();
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
 
-
 void AddServices(IServiceCollection services)
 {
     // This method configures the MVC services for the commonly used features with controllers and views.
