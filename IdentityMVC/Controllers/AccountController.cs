@@ -38,7 +38,6 @@ public class AccountController : Controller
         return View();
     }
 
-
     [HttpPost]
     public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
     {
@@ -55,4 +54,11 @@ public class AccountController : Controller
         return View(model);
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> LogOut()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction(nameof(HomeController.Index), "Home");
+    }
 }
