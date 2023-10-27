@@ -10,7 +10,7 @@ public class EmailSender : IEmailSender
 {
     public async System.Threading.Tasks.Task SendEmailAsync(string email, string subject, string htmlContent)
     {
-        Configuration.Default.ApiKey["api-key"] = "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";
+        Configuration.Default.ApiKey["api-key"] = "Your Api Key";
         var apiInstance = new TransactionalEmailsApi();
 
         var SenderName = "John Doe";
