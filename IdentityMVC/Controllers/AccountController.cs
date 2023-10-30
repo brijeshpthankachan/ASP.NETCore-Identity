@@ -110,7 +110,6 @@ public class AccountController : Controller
         return View(model);
     }
 
-
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult ExternalLogin(string provider, string returnUrl = null)
@@ -188,7 +187,6 @@ public class AccountController : Controller
     {
         foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
     }
-
 
     [HttpGet]
     public async Task<IActionResult> ConfirmEmail(string userId = null, string code = null)
